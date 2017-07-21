@@ -38,6 +38,9 @@ public class QLearing : SingletonMono<QLearing>
         return cells.Find((x) => x.Info.id == id);
     }
 
+    private float trainTime = 0.3f;
+    private float stepTime = 0.1f;
+
     public override void Awake()
     {
         base.Awake();
@@ -99,7 +102,7 @@ public class QLearing : SingletonMono<QLearing>
         JerryDrawer.Draw<DrawerElementLabel>()
             .SetID((a * 100 + b).ToString())
             .SetColor(Color.green)
-            .SetPos((dp.a.position + dp.b.position) * 0.5f + new Vector3(0f, 0.08f, 0))
+            .SetPos((dp.a.position + dp.b.position) * 0.5f + new Vector3(0f, 0.1f, 0))
             .SetText(Q[a, b].ToString());
     }
 
@@ -151,14 +154,14 @@ public class QLearing : SingletonMono<QLearing>
             {
                 GetCellByID(i).SetColor(Color.white);
             }
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(trainTime);
         }
     }
 
     private IEnumerator OneEpisode(int id)
     {
         GetCellByID(id).SetColor(Color.yellow);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(stepTime);
         while (id != 5)
         {
             List<int> ids = new List<int>();
@@ -181,7 +184,7 @@ public class QLearing : SingletonMono<QLearing>
             GetCellByID(id).SetColor(Color.gray);
             id = nid;
             GetCellByID(id).SetColor(Color.yellow);
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(stepTime);
         }
     }
 
