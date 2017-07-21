@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
-using System.Collections;
-using Jerry;
+using UnityEngine.UI;
 
 public class Cell : MonoBehaviour
 {
-    public Transform p1;
-    public Transform p2;
+    public Transform ld;
+    public Transform lu;
+    public Transform rd;
+    public Transform ru;
+
+    private Text text;
+    private Image img;
 
     private CellInfo info;
     public CellInfo Info
@@ -21,10 +25,36 @@ public class Cell : MonoBehaviour
 
     void Awake()
     {
-        p1 = this.transform.FindChild("p1");
-        p2 = this.transform.FindChild("p2");
+        lu = this.transform.FindChild("lu");
+        ld = this.transform.FindChild("ld");
+        ru = this.transform.FindChild("ru");
+        rd = this.transform.FindChild("rd");
+        img = this.transform.GetComponent<Image>();
+        text = this.transform.FindChild("Text").GetComponent<Text>();
         awaked = true;
         TryWork();
+    }
+
+    public Transform GetPoint(Transform next)
+    {
+        bool right = next.localPosition.x > this.transform.localPosition.x;
+        bool up = next.localPosition.y > this.transform.localPosition.y;
+        if (right && up)
+        {
+            return ru;
+        }
+        else if (right && !up)
+        {
+            return rd;
+        }
+        else if (!right && up)
+        {
+            return lu;
+        }
+        else
+        {
+            return ld;
+        }
     }
 
     public void SetInfo(CellInfo _info)
@@ -34,9 +64,9 @@ public class Cell : MonoBehaviour
         TryWork();
     }
 
-    void Update()
+    public void SetColor(Color col)
     {
-
+        img.color = col;
     }
 
     private void TryWork()
@@ -45,30 +75,14 @@ public class Cell : MonoBehaviour
         {
             return;
         }
+        this.transform.name = info.id.ToString();
         this.transform.localPosition = info.pos;
-    }
-
-    [ContextMenu("xxx")]
-    private void DoDraw()
-    {
-        if (info.id == 0)
-        {
-            JerryDrawer.Draw<DrawerElementPath>()
-            .SetPoints(this.p1, QLearing.Inst.GetCellByID(1 - info.id).p1)
-            .SetColor(Color.red);
-        }
-        else
-        {
-            JerryDrawer.Draw<DrawerElementPath>()
-            .SetPoints(this.p2, QLearing.Inst.GetCellByID(1 - info.id).p2)
-            .SetColor(Color.blue);
-        }
+        text.text = string.Format("{0}", info.id);
     }
 
     public class CellInfo
     {
         public int id = 0;
         public Vector3 pos = Vector3.zero;
-        public Color color = Color.white;
     }
 }
