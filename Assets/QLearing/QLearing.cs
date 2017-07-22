@@ -38,7 +38,7 @@ public class QLearing : SingletonMono<QLearing>
         return cells.Find((x) => x.Info.id == id);
     }
 
-    private float trainTime = 0.3f;
+    private float trainTime = 0.2f;
     private float stepTime = 0.1f;
 
     public override void Awake()
@@ -174,7 +174,7 @@ public class QLearing : SingletonMono<QLearing>
                     vals.Add(Q[id, i]);
                 }
             }
-            int idx = Util.SoftRandom(vals.ToArray());
+            int idx = Util.SoftRandom(vals.ToArray(), 1.0f, 0, 3);
             int nid = ids[idx];
 
             //Debug.LogWarning("============ " + id.ToString() + " cnt:" + ids.Count + " select:" + idx);
